@@ -1,0 +1,81 @@
+class_name Player
+extends CharacterBody2D
+
+@export var mass: float = 10.0
+@export var speed: float = 300.0
+@export var respawn_time: float = 1.0
+@export var die_velocity: float = -100.0
+@export var die_rotation: float = 0.1
+
+var start_position: Vector2
+var can_move: bool = true
+var is_rotating: bool = false
+
+const JUMP_VELOCITY: float = -400.0
+
+
+func _ready() -> void:
+	self.start_position = self.global_position
+
+
+func _physics_process(delta: float) -> void:
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * self.mass * delta
+		
+	if self.is_rotating:
+		%AnimatedSprite2D.rotate(self.die_rotation)
+		
+	if !self.is_rotating and %Area2DUp.has_overlapping_bodies() and %Area2DDown.has_overlapping_bodies():
+		var overlappingBodiesUp = %Area2DUp.get_overlapping_bodies()
+		if overlappingBodiesUp[0] is Thwomp:
+			var thwomp = overlappingBodiesUp[0] as Thwomp
+			if thwomp.is_angry:
+				self.die()
+		else:
+			self.die()
+
+	if !self.can_move:
+		move_and_slide()
+		return
+		
+	# Handle jump.
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var direction := Input.get_axis("move_left", "move_right")
+	if direction:
+		velocity.x = direction * speed
+		%AnimatedSprite2D.play("run")
+		
+		if direction < 0:
+			%AnimatedSprite2D.flip_h = false
+		else:
+			%AnimatedSprite2D.flip_h = true
+	else:
+		velocity.x = move_toward(velocity.x, 0, speed)
+		%AnimatedSprite2D.play("idle")
+
+	move_and_slide()
+	
+	
+func die() -> void:
+	%CollisionShape2D.set_deferred("disabled", true)
+	await get_tree().create_timer(0.01).timeout # For collisions to work properly, need to wait a bit before re-enabling
+	self.velocity.x = 0.0
+	self.velocity.y = self.die_velocity
+	self.can_move = false
+	self.is_rotating = true
+	await get_tree().create_timer(self.respawn_time).timeout
+	
+	self.global_position = self.start_position
+	self.velocity = Vector2.ZERO
+	self.can_move = true
+	self.is_rotating = false
+	%AnimatedSprite2D.rotation = 0.0
+	await get_tree().create_timer(0.1).timeout # For collisions to work properly, need to wait a bit before re-enabling
+	%CollisionShape2D.set_deferred("disabled", false)
+	%Area2DUp.monitoring = true
+	%Area2DDown.monitoring = true

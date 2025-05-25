@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=3 uid="uid://cqsbyuql5g4ts"]
+
+[ext_resource type="Script" uid="uid://sjuw3oeu5nyo" path="res://thwomp/thwomp.gd" id="1_ddqo0"]
+[ext_resource type="Texture2D" uid="uid://6y5axg8w3dvb" path="res://tilemaps/tilemap-characters_packed.png" id="2_bg1il"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7mycd"]
+atlas = ExtResource("2_bg1il")
+region = Rect2(72, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_272bh"]
+atlas = ExtResource("2_bg1il")
+region = Rect2(48, 24, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kek77"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7mycd")
+}],
+"loop": true,
+"name": &"angry",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_272bh")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7mycd"]
+size = Vector2(18, 18)
+
+[node name="Thwomp" type="AnimatableBody2D"]
+collision_mask = 3
+sync_to_physics = false
+script = ExtResource("1_ddqo0")
+fall_speed = 5.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_kek77")
+animation = &"angry"
+autoplay = "idle"
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(12.25, 11.75)
+shape = SubResource("RectangleShape2D_7mycd")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(12, 21)
+target_position = Vector2(0, 100)
+collision_mask = 2

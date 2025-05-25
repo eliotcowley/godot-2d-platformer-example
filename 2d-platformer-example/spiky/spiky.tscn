@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://c7jeum67beo8e"]
+
+[ext_resource type="Script" uid="uid://ea4a2o8v0pku" path="res://spiky/spiky.gd" id="1_psk3d"]
+[ext_resource type="Texture2D" uid="uid://6y5axg8w3dvb" path="res://tilemaps/tilemap-characters_packed.png" id="2_o8c8h"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lquwl"]
+atlas = ExtResource("2_o8c8h")
+region = Rect2(192, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7mycd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lquwl")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1bvp3"]
+
+[node name="Spiky" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_psk3d")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_7mycd")
+animation = &"idle"
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(12, 12)
+shape = SubResource("CircleShape2D_1bvp3")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
