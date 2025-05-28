@@ -7,5 +7,5 @@ func _ready() -> void:
 
 
 func _on_body_entered(body: Node2D) -> void:
-	var player = body as Player
+	var player: Player = body as Player
 	player.die()

@@ -31,7 +31,7 @@ func _physics_process(_delta: float) -> void:
 			self.is_rising = false
 
 
-func on_fall_timer_timeout():
+func on_fall_timer_timeout() -> void:
 	%AnimatedSprite2D.play("idle")
 	self.is_angry = false
 	self.is_rising = true

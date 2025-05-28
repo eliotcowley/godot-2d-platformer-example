@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://chu783qcbod13"]
+[gd_scene load_steps=18 format=4 uid="uid://chu783qcbod13"]
 
 [ext_resource type="Script" uid="uid://ddf7keaha83vq" path="res://main.gd" id="1_0xm2m"]
 [ext_resource type="Texture2D" uid="uid://djulfkyesp0cp" path="res://tilemaps/tilemap_packed.png" id="1_ig7tw"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bd61kjiebpds7" path="res://death_zone/death_zone.tscn" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cqsbyuql5g4ts" path="res://thwomp/thwomp.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://d2yaus7qhqhqn" path="res://spiny/spiny.tscn" id="8_5vw27"]
+[ext_resource type="Texture2D" uid="uid://6y5axg8w3dvb" path="res://tilemaps/tilemap-characters_packed.png" id="9_kek77"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5vw27"]
 texture = ExtResource("2_272bh")
@@ -235,6 +236,40 @@ physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_0xm2m")
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_4c57u"]
+atlas = ExtResource("9_kek77")
+region = Rect2(48, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_efxa6"]
+atlas = ExtResource("9_kek77")
+region = Rect2(0, 48, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dg77c"]
+atlas = ExtResource("9_kek77")
+region = Rect2(24, 48, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ycdy4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4c57u")
+}],
+"loop": true,
+"name": &"hide",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_efxa6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dg77c")
+}],
+"loop": true,
+"name": &"move",
+"speed": 5.0
+}]
+
 [node name="Main" type="Node"]
 script = ExtResource("1_0xm2m")
 
@@ -263,4 +298,14 @@ position = Vector2(72, 162)
 position = Vector2(288, 72)
 
 [node name="Spiny" parent="." instance=ExtResource("8_5vw27")]
-position = Vector2(198, 162)
+position = Vector2(126, 162)
+
+[node name="Spiny2" parent="." instance=ExtResource("8_5vw27")]
+position = Vector2(252, 162)
+
+[node name="Roomba" type="CharacterBody2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Roomba"]
+sprite_frames = SubResource("SpriteFrames_ycdy4")
+animation = &"move"
+autoplay = "move"

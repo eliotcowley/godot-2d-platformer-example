@@ -27,9 +27,9 @@ func _physics_process(delta: float) -> void:
 		%AnimatedSprite2D.rotate(self.die_rotation)
 		
 	if !self.is_rotating and %Area2DUp.has_overlapping_bodies() and %Area2DDown.has_overlapping_bodies():
-		var overlappingBodiesUp = %Area2DUp.get_overlapping_bodies()
+		var overlappingBodiesUp: Array[Node2D] = %Area2DUp.get_overlapping_bodies()
 		if overlappingBodiesUp[0] is Thwomp:
-			var thwomp = overlappingBodiesUp[0] as Thwomp
+			var thwomp: Thwomp = overlappingBodiesUp[0] as Thwomp
 			if thwomp.is_angry:
 				self.die()
 		else:
@@ -45,7 +45,7 @@ func _physics_process(delta: float) -> void:
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis("move_left", "move_right")
+	var direction: float = Input.get_axis("move_left", "move_right")
 	if direction:
 		velocity.x = direction * speed
 		%AnimatedSprite2D.play("run")

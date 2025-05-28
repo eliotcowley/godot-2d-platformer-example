@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://basmhw856ntl6"]
+
+[ext_resource type="Script" uid="uid://cflu7jb4nhxm4" path="res://spiny/hide_zones.gd" id="1_clvqp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kb08o"]
+size = Vector2(8, 10)
+
+[node name="HideZones" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_clvqp")
+
+[node name="CollisionShape2DLeft" type="CollisionShape2D" parent="."]
+position = Vector2(1, 19)
+shape = SubResource("RectangleShape2D_kb08o")
+
+[node name="CollisionShape2D2Right" type="CollisionShape2D" parent="."]
+position = Vector2(24, 19)
+shape = SubResource("RectangleShape2D_kb08o")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

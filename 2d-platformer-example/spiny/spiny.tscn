@@ -1,7 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://d2yaus7qhqhqn"]
+[gd_scene load_steps=11 format=3 uid="uid://d2yaus7qhqhqn"]
 
 [ext_resource type="Texture2D" uid="uid://6y5axg8w3dvb" path="res://tilemaps/tilemap-characters_packed.png" id="1_435km"]
 [ext_resource type="Script" uid="uid://d3gw7tfbcv86e" path="res://spiny/spiny.gd" id="1_jh7hm"]
+[ext_resource type="PackedScene" uid="uid://gddxrcb7pfxg" path="res://spiny/turning.tscn" id="3_16lby"]
+[ext_resource type="PackedScene" uid="uid://basmhw856ntl6" path="res://spiny/hide_zones.tscn" id="4_7okwr"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jh7hm"]
+atlas = ExtResource("1_435km")
+region = Rect2(192, 24, 24, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kek77"]
 atlas = ExtResource("1_435km")
@@ -13,6 +19,14 @@ region = Rect2(168, 24, 24, 24)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_efxa6"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jh7hm")
+}],
+"loop": true,
+"name": &"hide",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_kek77")
@@ -28,6 +42,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5vw27"]
 size = Vector2(13.285, 10)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jh7hm"]
+size = Vector2(5, 7)
+
 [node name="Spiny" type="CharacterBody2D"]
 script = ExtResource("1_jh7hm")
 speed = 50.0
@@ -36,22 +53,28 @@ speed = 50.0
 unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_efxa6")
-animation = &"move"
+animation = &"hide"
 autoplay = "move"
-frame = 1
-frame_progress = 0.524714
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(12, 18)
 shape = SubResource("RectangleShape2D_5vw27")
 
-[node name="RayCast2DLeft" type="RayCast2D" parent="."]
+[node name="Turning" parent="." instance=ExtResource("3_16lby")]
 unique_name_in_owner = true
-position = Vector2(4, 17)
-target_position = Vector2(-1, 0)
 
-[node name="RayCast2DRight" type="RayCast2D" parent="."]
-unique_name_in_owner = true
-position = Vector2(19, 17)
-target_position = Vector2(1, 0)
+[node name="Spike" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spike"]
+position = Vector2(12, 10)
+shape = SubResource("RectangleShape2D_jh7hm")
+
+[node name="HideZones" parent="." instance=ExtResource("4_7okwr")]
+
+[connection signal="left_collided" from="Turning" to="." method="_on_turning_left_collided"]
+[connection signal="right_collided" from="Turning" to="." method="_on_turning_right_collided"]
+[connection signal="body_entered" from="Spike" to="." method="_on_spike_body_entered"]
+[connection signal="hide" from="HideZones" to="." method="_on_hide_zones_hide"]
+[connection signal="unhide" from="HideZones" to="." method="_on_hide_zones_unhide"]
