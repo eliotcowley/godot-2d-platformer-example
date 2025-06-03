@@ -1,18 +1,15 @@
-extends CharacterBody2D
-
-@export var speed: float = 1.0
+extends Character
 
 var direction: float = -1.0
 var hiding: bool = false
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if hiding:
 		self.velocity.x = 0.0
 	else:
 		self.velocity.x = direction * self.speed
 
-	self.velocity.y = get_gravity().y
 	self.move_and_slide()
 
 

@@ -1,15 +1,9 @@
 class_name Player
-extends CharacterBody2D
+extends Character
 
-@export var mass: float = 10.0
-@export var speed: float = 300.0
 @export var respawn_time: float = 1.0
-@export var die_velocity: float = -100.0
-@export var die_rotation: float = 0.1
 
 var start_position: Vector2
-var can_move: bool = true
-var is_rotating: bool = false
 
 const JUMP_VELOCITY: float = -400.0
 
@@ -19,13 +13,6 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * self.mass * delta
-		
-	if self.is_rotating:
-		%AnimatedSprite2D.rotate(self.die_rotation)
-		
 	if !self.is_rotating and %Area2DUp.has_overlapping_bodies() and %Area2DDown.has_overlapping_bodies():
 		var overlappingBodiesUp: Array[Node2D] = %Area2DUp.get_overlapping_bodies()
 		if overlappingBodiesUp[0] is Thwomp:
@@ -62,12 +49,8 @@ func _physics_process(delta: float) -> void:
 	
 	
 func die() -> void:
-	%CollisionShape2D.set_deferred("disabled", true)
-	await get_tree().create_timer(0.01).timeout # For collisions to work properly, need to wait a bit before re-enabling
-	self.velocity.x = 0.0
-	self.velocity.y = self.die_velocity
-	self.can_move = false
-	self.is_rotating = true
+	super.die()
+	
 	await get_tree().create_timer(self.respawn_time).timeout
 	
 	self.global_position = self.start_position

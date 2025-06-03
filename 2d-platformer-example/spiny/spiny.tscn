@@ -46,6 +46,7 @@ size = Vector2(13.285, 10)
 size = Vector2(5, 7)
 
 [node name="Spiny" type="CharacterBody2D"]
+collision_layer = 4
 script = ExtResource("1_jh7hm")
 speed = 50.0
 
@@ -61,8 +62,10 @@ centered = false
 position = Vector2(12, 18)
 shape = SubResource("RectangleShape2D_5vw27")
 
-[node name="Turning" parent="." instance=ExtResource("3_16lby")]
+[node name="Turning" parent="." node_paths=PackedStringArray("ray_cast_left", "ray_cast_right") instance=ExtResource("3_16lby")]
 unique_name_in_owner = true
+ray_cast_left = NodePath("../RayCast2DLeft")
+ray_cast_right = NodePath("../RayCast2DRight")
 
 [node name="Spike" type="Area2D" parent="."]
 collision_mask = 2
@@ -72,6 +75,14 @@ position = Vector2(12, 10)
 shape = SubResource("RectangleShape2D_jh7hm")
 
 [node name="HideZones" parent="." instance=ExtResource("4_7okwr")]
+
+[node name="RayCast2DLeft" type="RayCast2D" parent="."]
+position = Vector2(5, 19)
+target_position = Vector2(-1, 0)
+
+[node name="RayCast2DRight" type="RayCast2D" parent="."]
+position = Vector2(20, 19)
+target_position = Vector2(1, 0)
 
 [connection signal="left_collided" from="Turning" to="." method="_on_turning_left_collided"]
 [connection signal="right_collided" from="Turning" to="." method="_on_turning_right_collided"]
